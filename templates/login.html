@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <form action="/login" method="post">
+        <div class="form-group">
+        <div class="form-group">
+            {% if firstTime == True %}
+                <input class="form-control" name="password" placeholder="Password" type="password">
+            {% endif %}
+            {% if wrongPassword == True %}
+                <input class="form-control is-invalid" name="password" placeholder="Password" type="password">
+            {% endif %}
+        </div>
+        <button class="btn btn-primary buttonColor" type="submit">Log In</button>
+    </form>
+{% endblock %}

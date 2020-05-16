@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Receipts
+{% endblock %}
+
+{% block main %}
+    <!--BUTTONS TO SELECT RECEIPT FOR EITHER CLIENTS OR SEMINARS-->
+    <div>
+        <button id="clientBtn" class="btn btn-primary buttonColor" type="button" onclick="showClient()">Client</button>
+        <button id="seminarBtn" class="btn btn-outline-primary outlineBtnColor" type="button" onclick="showSeminar()">Seminar</button>
+    </div>
+
+    <!--FORM FOR CLIENT RECEIPT-->
+    <div id="clientID" style="display: block;">
+        <form method="post" action="/getClientReceipt" class="container p-5">
+
+            <div class="form-check form-check-inline">
+                <input required class="form-check-input" type="radio" name="source" id="AirBnB" value="AirBnB">
+                <label required class="form-check-label" for="AirBnB">AirBnB</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input required class="form-check-input" type="radio" name="source" id="Other" value="Other">
+                <label required class="form-check-label" for="Other">Other</label>
+            </div>
+
+            <div class="formSpace">
+                <label for="firstName">First Name</label>
+                <input required type="text" class="form-control" name="firstName" id="firstName">
+            </div>
+
+            <div class="formSpace">
+                <label for="lastName">Last Name</label>
+                <input required type="text" class="form-control" name="lastName" id="lastName">
+            </div>
+    
+            <div class="form-check form-check-inline">
+                <input required class="form-check-input" type="radio" name="gender" id="m" value="m">
+                <label required class="form-check-label" for="m">Male</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input required class="form-check-input" type="radio" name="gender" id="f" value="f">
+                <label required class="form-check-label" for="f">Female</label>
+            </div>
+
+            <div class="formSpace">
+                <label for="ID">Receipt Number</label>
+                <input required type="number" min="0" class="form-control" name="ID" id="ID">
+            </div>
+            
+            <div class="formSpace">
+                <label for="startDate">Start Date</label>
+                <input required class="form-control" type="date" id="startDate" name="startDate">
+            </div>
+
+            <div class="formSpace">
+                <label for="endDate">End Date</label>
+                <input required class="form-control" type="date" id="endDate" name="endDate">
+            </div>
+
+            <div class="formSpace">
+                <label for="totalPrice">Total Price (MAD)</label>
+                <input required class="form-control" type="number" min="0" placeholder="ex. 1234.56" name="totalPrice" id="totalPrice" step=".01">
+            </div>
+
+            <div style="margin: 30px;">
+                <button type="submit" class="btn btn-primary buttonColor">Create Receipt</button>
+            </div>
+
+        </form>
+    </div>
+
+    <!--FORM FOR SEMINAR RECEIPT-->
+    <div id="seminarID" style="display: none;">
+        <form method="post" action="/getSeminarReceipt" class="container p-5">
+
+            <div class="formSpace">
+                <label for="company">Company</label>
+                <input required type="text" class="form-control" name="company" id="company">
+            </div>
+
+            <div class="formSpace">
+                <label for="ID">Receipt Number</label>
+                <input required type="number" min="0" class="form-control" name="ID" id="ID">
+            </div>
+            
+            <div class="formSpace">
+                <label for="startDate">Start Date</label>
+                <input required class="form-control" type="date" id="startDate" name="startDate">
+            </div>
+
+            <div class="formSpace">
+                <label for="endDate">End Date</label>
+                <input required class="form-control" type="date" id="endDate" name="endDate">
+            </div>
+
+            <div class="formSpace">
+                <label for="totalPrice">Price per day (HT MAD)</label>
+                <input required class="form-control" type="number" min="0" placeholder="ex. 1234.56" name="pricePerDay" id="pricePerDay" step=".01">
+            </div>
+
+            <div style="margin: 60px;">
+                <button type="submit" class="btn btn-primary buttonColor">Create Receipt</button>
+            </div>
+
+        </form>
+    </div>
+
+    <!--MANAGE WHAT APPEARS WHEN SWITCHING RECEIPT-TYPE IN THE DROPDOWN MENU-->
+    <!--RELOAD PAGE ONCE RECEIPT IS DOWNLOADED TO AVOID DOUBLE-DOWNLOAD AND DOUBLE-INSERTION INTO DB-->
+    <script>
+        function showClient()
+        {
+            document.getElementById("clientBtn").className = "btn btn-primary buttonColor";
+            document.getElementById("seminarBtn").className = "btn btn-outline-primary outlineBtnColor";
+
+            document.getElementById("clientID").style.display = "block";
+            document.getElementById("seminarID").style.display = "none";
+        }
+
+        function showSeminar()
+        {
+            document.getElementById("clientBtn").className = "btn btn-outline-primary outlineBtnColor";
+            document.getElementById("seminarBtn").className = "btn btn-primary buttonColor";
+
+            document.getElementById("clientID").style.display = "none";
+            document.getElementById("seminarID").style.display = "block";
+        }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Download
+{% endblock %}
+
+{% block main %}
+    <h3 style="color: #26b7c2;">Success! Your receipt can now be downloaded!</h3>
+    <h5 style="margin-top: 25px;">Make sure to check the receipt for any errors. For seminars, </h4>
+    <h5>don't forget to include the company's information!</h4>
+
+    <div>
+        <h6 class="btn btn-primary spaced buttonColor btn-lg"><a style="color: white;" href="/getReceipt">Download</a></h6>
+    </div>
+    
+    <div>
+        <a href="/" class="btn btn-primary spaced buttonColor" style="margin-top: 0px;">Make Another Receipt</a>
+    </div>
+{% endblock %}

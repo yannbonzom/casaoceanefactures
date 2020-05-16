@@ -1,0 +1,95 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+/* colors for brand */
+nav .navbar-brand .blue
+{
+    color: #26b7c2;
+}
+
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main
+{
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
+
+.dropdown
+{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.buttonColor 
+{
+    background-color: #26b7c2;
+    border-color: #26b7c2;
+}
+
+.outlineBtnColor
+{
+    color: #26b7c2;
+    border-color: #26b7c2;
+}
+
+.spaced 
+{
+    margin: 30px;
+}
+
+.formSpace
+{
+    margin: 10px;
+}
+
+
+/* Stuff for forms */
+form {
+    width: 100%;
+    margin: 0 auto;
+}
+
+label, input {
+    /* In order to define widths */
+    display: inline-block;
+}
+
+label {
+    width: 30%;
+    /* Positions the label text beside the input */
+    text-align: right;
+}
+
+label + input {
+    width: 30%;
+    /* Large margin-right to force the next element to the new-line
+       and margin-left to create a gutter between the label and input */
+    margin: 0 15% 0 4%;
+}
+
+/* Only the submit button is matched by this selector,
+   but to be sure you could use an id or class for that button */
+input + input {
+    float: right;
+}

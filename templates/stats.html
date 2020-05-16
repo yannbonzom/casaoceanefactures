@@ -1,0 +1,155 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Statistics
+{% endblock %}
+
+{% block main %}
+    <!--GENERAL STATISTICS SHOWN ON IN BOTH CLIENT AND SEMINAR MODES-->
+    <h4 style="text-align: left; color: #26b7c2;">Overview</h4>
+    <div style="overflow: hidden;">
+        <!--REVENUE TABLE-->
+        <div style="float: left;">
+            <table style="display: inline-block;" class="table table-striped">
+                <h5 style="text-align: left; color: #26b7c2; float: left;">Revenue</h5>
+
+                <thead>
+                    <tr>
+                        <th>From Clients</th>
+                        <th>From Seminars</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ revenues['clientPercent'] }}%</td>
+                        <td>{{ revenues['seminarPercent'] }}%</td>
+                        <td>100%</td>
+                    </tr>
+                    <tr>
+                        <td>{{ revenues['clientRev'] }}</td>
+                        <td>{{ revenues['seminarRev'] }}</td>
+                        <td>{{ revenues['total'] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!--CLIENT SOURCE PERCENTAGES-->
+        <div style="float: left; margin-left: 80px;">
+            <table style="display: inline-block;" class="table table-striped">
+                <h5 style="text-align: left; color: #26b7c2;">Client Sources</h5>
+                <thead>
+                    <tr>
+                        <th>AirBnB</th>
+                        <th>Other</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ sources['percentAirbnb'] }}%</td>
+                        <td>{{ sources['percentOther'] }}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--BUTTONS TO SELECT DATA FROM EITHER CLIENTS OR SEMINARS-->
+    <div>
+        <button id="clientBtn" class="btn btn-primary buttonColor" type="button" onclick="showClient()">Client</button>
+        <button id="seminarBtn" class="btn btn-outline-primary outlineBtnColor" type="button" onclick="showSeminar()">Seminar</button>
+    </div>
+    
+    <!--'ALL CLIENTS DATA' TABLE-->
+    <div id="clientID" style="display: block;">
+        <table class="table table-striped">
+            <div>
+                <h4 style="text-align: left; color: #26b7c2; float: left;">All Client Data</h4>
+                <h6><a style="float: right;"" href="/getClientCSV">Export Client Data</a></h6>
+            </div>
+            
+            <thead>
+                <tr>
+                    <th scope="col">Receipt N°</th>
+                    <th scope="col">Source</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Sex</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Length (Days)</th>
+                    <th scope="col">Total (MAD)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(clientTableLength) %}
+                <tr>
+                    <td>{{ clientData[i][0] }}</td>
+                    <td>{{ clientData[i][1] }}</td>
+                    <td>{{ clientData[i][2] }}</td>
+                    <td>{{ clientData[i][3] }}</td>
+                    <td>{{ clientData[i][4] }}</td>
+                    <td>{{ clientData[i][5] }}</td>
+                    <td>{{ clientData[i][6] }}</td>
+                    <td>{{ clientData[i][7] }}</td>
+                    <td>{{ clientData[i][8] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!--'ALL SEMINAR DATA' TABLE'-->
+    <div id="seminarID" style="display: none;">
+        <table class="table table-striped">
+            <div>
+                <h4 style="text-align: left; color: #26b7c2; float: left;">All Seminar Data</h4>
+                <h6><a style="float: right;"" href="/getSeminarCSV">Export Seminar Data</a></h6>
+            </div>
+            <thead>
+                <tr>
+                    <th scope="col">Receipt N°</th>
+                    <th scope="col">Company</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Duration (Days)</th>
+                    <th scope="col">Daily Price (HT MAD)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(seminarTableLength) %}
+                <tr>
+                    <td>{{ seminarData[i][0] }}</td>
+                    <td>{{ seminarData[i][1] }}</td>
+                    <td>{{ seminarData[i][2] }}</td>
+                    <td>{{ seminarData[i][3] }}</td>
+                    <td>{{ seminarData[i][4] }}</td>
+                    <td>{{ seminarData[i][5] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!--MANAGE WHAT APPEARS WHEN SWITCHING RECEIPT-TYPE IN THE DROPDOWN MENU-->
+    <script>
+        function showClient()
+        {
+            document.getElementById("clientBtn").className = "btn btn-primary buttonColor";
+            document.getElementById("seminarBtn").className = "btn btn-outline-primary outlineBtnColor";
+
+            document.getElementById("clientID").style.display = "block";
+            document.getElementById("seminarID").style.display = "none";
+        }
+
+        function showSeminar()
+        {
+            document.getElementById("clientBtn").className = "btn btn-outline-primary outlineBtnColor";
+            document.getElementById("seminarBtn").className = "btn btn-primary buttonColor";
+
+            document.getElementById("clientID").style.display = "none";
+            document.getElementById("seminarID").style.display = "block";
+        }
+    </script>
+{% endblock %}
