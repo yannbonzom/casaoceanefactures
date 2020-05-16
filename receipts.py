@@ -1,9 +1,6 @@
 from docx import Document
 import math
-from datetime import date, datetime
 from docx.shared import Pt
-from docx.enum.section import WD_SECTION
-from docx.enum.text import WD_ALIGN_PARAGRAPH
 import sqlite3
 
 

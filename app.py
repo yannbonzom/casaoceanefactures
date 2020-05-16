@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, send_file, Response, flash, session, flash
+from flask import Flask, render_template, request, redirect, send_file, session
 import flask_login
 from werkzeug.security import check_password_hash
-from receipts import clientReceipt, seminarReceipt, mad
+from receipts import clientReceipt, seminarReceipt
 from datetime import date, datetime
 from os import remove
 import sqlite3
