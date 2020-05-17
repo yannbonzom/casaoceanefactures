@@ -1,0 +1,4 @@
+.venv/
+clientCSV.csv
+seminarCSV.csv
+__pycache__/
