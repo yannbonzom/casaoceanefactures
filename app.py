@@ -3,13 +3,14 @@ import flask_login
 from werkzeug.security import check_password_hash
 from receipts import clientReceipt, seminarReceipt
 from datetime import date, datetime
-from os import remove
+from os import remove, path
 import sqlite3
 
 
 # Configure app
 app = Flask(__name__)
 app.secret_key = "b'mo&I:/xfc2xfb.x0bc,xe3?xdbJ/xac!$5'"
+ROOT = path.dirname(path.realpath(__file__))
 
 
 # LOGIN STUFF
@@ -49,7 +50,7 @@ def login():
 def logout():
     # Delete any receipt in web app, if any
     if session['docName']:
-        remove(session['docName'])
+        remove(path.join(ROOT, session['docName']))
         session['docName'] = None
 
     flask_login.logout_user()
@@ -62,7 +63,7 @@ def logout():
 def receipt():
     # Delete any receipt in web app, if any
     if session['docName']:
-        remove(session['docName'])
+        remove(path.join(ROOT, session['docName']))
         session['docName'] = None
 
     return render_template('receipt.html')
@@ -136,7 +137,7 @@ def getSeminarReceipt():
 # To download the receipt when button is clicked
 @app.route("/getReceipt")
 def getReceipt():
-    return send_file(session['docName'], as_attachment = True)
+    return send_file(path.join(ROOT, session['docName']), as_attachment = True)
 
 
 # STATISTICS PAGE
@@ -147,14 +148,14 @@ def stats():
     if request.method == "GET":
         # Delete any receipt in web app, if any
         if session['docName']:
-            remove(session['docName'])
+            remove(path.join(ROOT, session['docName']))
             session['docName'] = None
 
         # Current year to limit all db data for Overview Stats to the current year
         year = str(datetime.now().year)
         
         # Open db
-        connection = sqlite3.connect('receipts.db')
+        connection = sqlite3.connect(path.join(ROOT, "receipts.db"))
         
         # REVENUE TABLE
         # Set up dict with revenue data
@@ -203,7 +204,7 @@ def stats():
         clientTableLength = len(clientData)
         # Create Client CSV file to export data
         clientCSVCursor = connection.cursor()
-        with open('clientCSV.csv', 'w') as file:
+        with open(path.join(ROOT, 'clientCSV.csv'), 'w') as file:
             file.write("Receipt Number,First Name,Last Name,Sex,Start Date,End Date,Length of Stay,Total Price\n")
             for row in clientCSVCursor.execute("SELECT receiptID, firstName, lastName, sex, startDate, endDate, lengthOfStay, totalPrice FROM receipts WHERE type = 'client' ORDER By endDate DESC, receiptID DESC"):
                 for i in range(len(row)):
@@ -217,7 +218,7 @@ def stats():
         seminarTableLength = len(seminarData)
         # Create Seminar CSV file to export data
         seminarCSVCursor = connection.cursor()
-        with open('seminarCSV.csv', 'w') as file:
+        with open(path.join(ROOT, 'seminarCSV.csv'), 'w') as file:
             file.write("Receipt Number, Company, Start Date, End Date, Duration, Price per Day (HT)\n")
             for row in seminarCSVCursor.execute("SELECT receiptID, company, startDate, endDate, lengthOfStay, pricePerDayWithoutTax FROM receipts WHERE type = 'seminar' ORDER BY endDate DESC, receiptID DESC"):
                 for i in range(len(row)):
@@ -241,8 +242,8 @@ def stats():
 # To download the client CSV
 @app.route('/getClientCSV')
 def getClientCSV():
-    return send_file('clientCSV.csv', as_attachment=True)
+    return send_file(path.join(ROOT, 'clientCSV.csv'), as_attachment=True)
 # To download the seminar CSV
 @app.route('/getSeminarCSV')
 def getSeminarCSV():
-    return send_file('seminarCSV.csv', as_attachment=True)
+    return send_file(path.join(ROOT, 'seminarCSV.csv'), as_attachment=True)

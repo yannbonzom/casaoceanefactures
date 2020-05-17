@@ -2,12 +2,15 @@ from docx import Document
 import math
 from docx.shared import Pt
 import sqlite3
+from os import path
 
+# Root for the db so that it works locally and on PythonAnywhere
+ROOT = path.dirname(path.realpath(__file__))
 
 # Generate client receipt
 def clientReceipt(source, firstName, lastName, sex, startDate, endDate, lengthOfStay, receiptID, totalPrice):
     # Before proceeding, store all data in the db
-    connection = sqlite3.connect('receipts.db')
+    connection = sqlite3.connect(path.join(ROOT, "receipts.db"))
     cursor = connection.cursor()
     cursor.execute("INSERT INTO receipts (type, source, firstName, lastName, sex, startDate, endDate, lengthOfStay, receiptID, totalPrice) VALUES ('client', ?, ?, ?, ?, ?, ?, ?, ?, ?)", (source, firstName, lastName, sex, startDate, endDate, lengthOfStay, receiptID, totalPrice))
     cursor.close()
@@ -19,7 +22,7 @@ def clientReceipt(source, firstName, lastName, sex, startDate, endDate, lengthOf
     tax = round_down(0.2 * withoutTax, 2)
 
     # Open template which we'll later save in another document
-    document = Document('clientTemplate.docx')
+    document = Document(path.join(ROOT, 'clientTemplate.docx'))
 
     # Font settings
     # For all 'paragraphs'
@@ -70,7 +73,7 @@ def clientReceipt(source, firstName, lastName, sex, startDate, endDate, lengthOf
 
     # Save document with formatted name
     docName = "FACTURE MDB Maroc Services " + str(receiptID) + "-" + str(endDate.year) + ".docx"
-    document.save(docName)
+    document.save(path.join(ROOT, docName))
     
     # Download it to the user's computer
     return docName
@@ -78,7 +81,7 @@ def clientReceipt(source, firstName, lastName, sex, startDate, endDate, lengthOf
 # Generate seminar receipt
 def seminarReceipt(company, receiptID, startDate, endDate, lengthOfStay, pricePerDayWithoutTax):
     # Before proceeding, store all data in the db
-    connection = sqlite3.connect('receipts.db')
+    connection = sqlite3.connect(path.join(ROOT, "receipts.db"))
     cursor = connection.cursor()
     cursor.execute("INSERT INTO receipts (type, company, receiptID, startDate, endDate, lengthOfStay, pricePerDayWithoutTax) VALUES ('seminar', ?, ?, ?, ?, ?, ?)", (company, receiptID, startDate, endDate, lengthOfStay, pricePerDayWithoutTax))
     cursor.close()
@@ -91,7 +94,7 @@ def seminarReceipt(company, receiptID, startDate, endDate, lengthOfStay, pricePe
     totalPrice = round_up(withoutTax + tax)
 
     # Open template which we'll later save in another document
-    document = Document('seminarTemplate.docx')
+    document = Document(path.join(ROOT, 'seminarTemplate.docx'))
 
     # Font settings
     # For all 'paragraphs'
@@ -140,7 +143,7 @@ def seminarReceipt(company, receiptID, startDate, endDate, lengthOfStay, pricePe
 
     # Save document with formatted name
     docName = "FACTURE MDB Maroc Services " + str(receiptID) + "-" + str(endDate.year) + " " + company + ".docx"
-    document.save(docName)
+    document.save(path.join(ROOT, docName))
     
     # Download it to the user's computer
     return docName
