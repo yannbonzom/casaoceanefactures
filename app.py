@@ -38,6 +38,8 @@ def login():
             user = User()
             user.id = 'CASAOCEANE'
             flask_login.login_user(user)
+            # Clear docName for the session when logging in
+            session['docName'] = None
             return redirect('/')
         else:
             return render_template("login.html", wrongPassword = True)
@@ -45,6 +47,11 @@ def login():
 @app.route("/logout")
 @flask_login.login_required
 def logout():
+    # Delete any receipt in web app, if any
+    if session['docName']:
+        remove(session['docName'])
+        session['docName'] = None
+
     flask_login.logout_user()
     return redirect('/login')
 
