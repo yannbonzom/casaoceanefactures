@@ -162,65 +162,6 @@ def round_up(n, decimals=0):
 def round_down(n, decimals=0):
     multiplier = 10 ** decimals
     return math.floor(n * multiplier) / multiplier
-
-    # Set up number dictionaries
-    numbers = {
-        "1": "un",
-        "2": "deux",
-        "3": "trois",
-        "4": "quatre",
-        "5": "cinq",
-        "6": "six",
-        "7": "sept",
-        "8": "huit", 
-        "9": "neuf", 
-        "11": "onze",
-        "12": "douze", 
-        "13": "treize",
-        "14": "quatorze",
-        "15": "quinze",
-        "16": "seize"
-    }
-    tens = {
-        "1": "dix", 
-        "2": "vingt",
-        "3": "trente",
-        "4": "quarante", 
-        "5": "cinquante",
-        "6": "soixante",
-        "7": "soixante-dix",
-        "8": "quatre-vingt",
-        "9": "quatre-vingt-dix",
-    }
-
-    # Make any block of threes actually have three numbers (ex. 9 --> 009)
-    threes = int(threes)
-    threes = "{0:03}".format(threes)
-
-    # Declare the return value toWords
-    toWords = ""
-    
-    # State hundreds place
-    if threes[0] != "0":
-        # Account for spelling difference cent-cents
-        if threes[1] == "0" and threes[2] == "0":
-            toWords = numbers[threes[0]] + " cents"
-            return toWords
-        else:
-            toWords = numbers[threes[0]] + " cent "
-    # Account for numbers from 11-16
-    if f"{threes[1]}{threes[2]}" in numbers.keys():
-        toWords += numbers[f"{threes[1]}{threes[2]}"]
-        return toWords
-    # State tens place
-    if threes[1] != "0":
-        toWords += tens[threes[1]] + " "
-    # State ones place
-    if threes[2] != "0":
-        toWords += numbers[threes[2]]
-
-    # Return the written out form
-    return toWords
 # Converting price in numbers into words
 def toWords(n):
     # inWords string
