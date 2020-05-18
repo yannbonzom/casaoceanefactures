@@ -157,6 +157,21 @@ def stats():
         # Open db
         connection = sqlite3.connect(path.join(ROOT, "receipts.db"))
         
+        # If there is nothing in the database (for both clients and seminars), display error message
+        # Get client count
+        clientCountCursor = connection.cursor()
+        clientCountCursor.execute("SELECT COUNT (*) FROM receipts WHERE type = 'client'")
+        clientCountData = clientCountCursor.fetchall()
+        clientCount = clientCountData[0][0]
+        # Get seminar count
+        seminarCountCursor = connection.cursor()
+        seminarCountCursor.execute("SELECT COUNT (*) FROM receipts WHERE type = 'seminar'")
+        seminarCountData = seminarCountCursor.fetchall()
+        seminarCount = seminarCountData[0][0]
+        # Do check to display error message
+        if clientCount == 0 or seminarCount == 0:
+            return render_template("stats.html", noData = True)
+
         # REVENUE TABLE
         # Set up dict with revenue data
         revenues = {}
@@ -226,6 +241,8 @@ def stats():
                 file.write('\n')
 
         # Save and close cursors and db
+        clientCountCursor.close()
+        seminarCountCursor.close()
         clientDataCursor.close()
         clientCSVCursor.close()
         seminarDataCursor.close()
@@ -247,3 +264,44 @@ def getClientCSV():
 @app.route('/getSeminarCSV')
 def getSeminarCSV():
     return send_file(path.join(ROOT, 'seminarCSV.csv'), as_attachment=True)
+# Delete client receipt entry on button click
+@app.route("/deleteClient", methods=['POST'])
+def deleteClient():
+    if request.method == 'POST':
+        # Get info on which user to delete
+        entryData = request.form['deleteClient']
+        entryDataSplit = entryData.split(" ")
+        receiptID = entryDataSplit[0]
+        totalPrice = entryDataSplit[1]
+
+        # Delete from the db
+        connection = sqlite3.connect(path.join(ROOT, "receipts.db"))
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM receipts WHERE receiptID = ? AND totalPrice = ?", (receiptID, totalPrice))
+        cursor.close()
+        connection.commit()
+        connection.close()
+
+        # Reload page
+        return redirect("/stats")
+# Delete seminar receipt entry on button click
+@app.route("/deleteSeminar", methods=['POST'])
+def deleteSeminar():
+    if request.method == 'POST':
+        # Get info on which user to delete
+        entryData = request.form['deleteSeminar']
+        entryDataSplit = entryData.split(" ")
+        receiptID = entryDataSplit[0]
+        lengthOfStay = entryDataSplit[1]
+
+        # Delete from the db
+        connection = sqlite3.connect(path.join(ROOT, "receipts.db"))
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM receipts WHERE receiptID = ? AND lengthOfStay = ?", (receiptID, lengthOfStay))
+        cursor.close()
+        connection.commit()
+        connection.close()
+
+        # Reload page
+        return redirect("/stats")
+
