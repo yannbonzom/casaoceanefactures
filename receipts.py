@@ -56,7 +56,7 @@ def clientReceipt(source, firstName, lastName, sex, startDate, endDate, lengthOf
                 else: 
                     paragraph.text = f"Durée séjour de {sex} {lastName}: {lengthOfStay} jours, du {two(startDate.day)}/{two(startDate.month)} au {two(endDate.day)}/{two(endDate.month)}/{endDate.year},"
         elif "<firstParagraphPricePart>" in paragraph.text:
-            paragraph.text = f"au prix de {mad(totalPrice)} TTC."
+            paragraph.text = f"au prix de{mad(totalPrice)} TTC."
         elif "<totalPrice>" in paragraph.text:
             paragraph.text = f"NET A PAYER EN MAD:  {mad(totalPrice)} TTC"
         elif "<inWords>" in paragraph.text:
@@ -127,7 +127,7 @@ def seminarReceipt(company, receiptID, startDate, endDate, lengthOfStay, pricePe
                 else: 
                     paragraph.text = f"SEMINAIRE: {lengthOfStay} jours, du {two(startDate.day)}/{two(startDate.month)} au {two(endDate.day)}/{two(endDate.month)}/{endDate.year}, au prix par jour"
         elif "<firstParagraphPricePart>" in paragraph.text:
-            paragraph.text = f"de {mad(pricePerDayWithoutTax)} HT."
+            paragraph.text = f"de{mad(pricePerDayWithoutTax)} HT."
         elif "<totalPrice>" in paragraph.text:
             paragraph.text = f"NET A PAYER EN MAD:  {mad(totalPrice)} TTC"
         elif "<inWords>" in paragraph.text:
