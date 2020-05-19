@@ -47,14 +47,16 @@ def clientReceipt(source, firstName, lastName, sex, startDate, endDate, lengthOf
         if "<firstParagraph>" in paragraph.text:
             if lengthOfStay == 1:
                 if startDate.year != endDate.year:
-                    paragraph.text = f"Durée séjour de {sex} {lastName}: 1 jour, du {two(startDate.day)}/{two(startDate.month)}/{startDate.year} au {two(endDate.day)}/{two(endDate.month)}/{endDate.year}, au prix de {mad(totalPrice)} TTC."
+                    paragraph.text = f"Durée séjour de {sex} {lastName}: 1 jour, du {two(startDate.day)}/{two(startDate.month)}/{startDate.year} au {two(endDate.day)}/{two(endDate.month)}/{endDate.year},"
                 else: 
-                    paragraph.text = f"Durée séjour de {sex} {lastName}: 1 jour, du {two(startDate.day)}/{two(startDate.month)} au {two(endDate.day)}/{two(endDate.month)}/{endDate.year}, au prix de {mad(totalPrice)} TTC."
+                    paragraph.text = f"Durée séjour de {sex} {lastName}: 1 jour, du {two(startDate.day)}/{two(startDate.month)} au {two(endDate.day)}/{two(endDate.month)}/{endDate.year},"
             else: 
                 if startDate.year != endDate.year:
-                    paragraph.text = f"Durée séjour de {sex} {lastName}: {lengthOfStay} jours, du {two(startDate.day)}/{two(startDate.month)}/{startDate.year} au {two(endDate.day)}/{two(endDate.month)}/{endDate.year}, au prix de {mad(totalPrice)} TTC."
+                    paragraph.text = f"Durée séjour de {sex} {lastName}: {lengthOfStay} jours, du {two(startDate.day)}/{two(startDate.month)}/{startDate.year} au {two(endDate.day)}/{two(endDate.month)}/{endDate.year},"
                 else: 
-                    paragraph.text = f"Durée séjour de {sex} {lastName}: {lengthOfStay} jours, du {two(startDate.day)}/{two(startDate.month)} au {two(endDate.day)}/{two(endDate.month)}/{endDate.year}, au prix de {mad(totalPrice)} TTC."
+                    paragraph.text = f"Durée séjour de {sex} {lastName}: {lengthOfStay} jours, du {two(startDate.day)}/{two(startDate.month)} au {two(endDate.day)}/{two(endDate.month)}/{endDate.year},"
+        elif "<firstParagraphPricePart>" in paragraph.text:
+            paragraph.text = f"au prix de {mad(totalPrice)} TTC."
         elif "<totalPrice>" in paragraph.text:
             paragraph.text = f"NET A PAYER EN MAD:  {mad(totalPrice)} TTC"
         elif "<inWords>" in paragraph.text:
@@ -272,13 +274,19 @@ def read(threes):
     if f"{threes[1]}{threes[2]}" in numbers.keys():
         toWords += numbers[f"{threes[1]}{threes[2]}"]
         return toWords
-    # State tens place
-    if threes[1] != "0":
+    # State tens place (if-elif accounts for correct spacing between the number and 'dirhams')
+    if threes[1] != "0" and threes[2] != "0":
         # Account for '-' connection when in 70s or 90s
         if threes[1] == "7" or threes[1] == "9":
             toWords += tens[threes[1]]
         else: 
             toWords += tens[threes[1]] + " "
+    elif threes[1] != "0":
+        # Account for '-' connection when in 70s or 90s
+        if threes[1] == "7" or threes[1] == "9":
+            toWords += tens[threes[1]]
+        else: 
+            toWords += tens[threes[1]]
     # State ones place
     if threes[2] != "0":
         # Account for '-' connection when in 70s or 90s
