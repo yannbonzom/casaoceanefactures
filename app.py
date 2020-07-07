@@ -66,7 +66,18 @@ def receipt():
         remove(path.join(ROOT, session['docName']))
         session['docName'] = None
 
-    return render_template('receipt.html')
+    # Get the receipt number to pre-fill the receipt number text box
+    connection = sqlite3.connect(path.join(ROOT, "receipts.db"))
+    cursor = connection.cursor()
+    cursor.execute("SELECT MAX (receiptID) FROM receipts")
+    receiptIDData = cursor.fetchall()
+    receiptID = int(receiptIDData[0][0])
+    newReceiptID = receiptID + 1
+    cursor.close()
+    connection.commit()
+    connection.close()
+
+    return render_template('receipt.html', newReceiptID = newReceiptID)
 # Client receipt page
 @app.route("/getClientReceipt", methods=["POST"])
 def getClientReceipt():
