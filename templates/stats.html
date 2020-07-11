@@ -101,7 +101,7 @@
                         <td>{{ clientData[i][7] }}</td>
                         <td>{{ clientData[i][8] }}</td>
                         <td>
-                            <form action="/deleteClient" method="POST">
+                            <form action="/deleteClient" method="POST" onsubmit="return confirm('Do you really want to delete this entry?');">
                                 <button class="btn btn-outline-danger btn-sm" type="submit" name="deleteClient" value="{{ clientData[i][0] }} {{ clientData[i][8] }}">Delete</button>
                             </form>
                         </td>
@@ -139,7 +139,7 @@
                         <td>{{ seminarData[i][4] }}</td>
                         <td>{{ seminarData[i][5] }}</td>
                         <td>
-                            <form action="/deleteSeminar" method="POST">
+                            <form action="/deleteSeminar" method="POST" onsubmit="return confirm('Do you really want to delete this entry?');">
                                 <button class="btn btn-outline-danger btn-sm" type="submit" name="deleteSeminar" value="{{ seminarData[i][0] }} {{ seminarData[i][4] }}">Delete</button>
                             </form>
                         </td>
