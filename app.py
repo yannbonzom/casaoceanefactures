@@ -71,7 +71,7 @@ def receipt():
     # Get the receipt number to pre-fill the receipt number text box
     connection = sqlite3.connect(path.join(ROOT, "receipts.db"))
     cursor = connection.cursor()
-    cursor.execute("SELECT MAX (receiptID) FROM receipts WHERE endDate >= '{year}-01-01'")
+    cursor.execute(f"SELECT MAX (receiptID) FROM receipts WHERE endDate >= '{year}-01-01'")
     receiptIDData = cursor.fetchall()
     if receiptIDData[0][0] is None:
         receiptID = 0
