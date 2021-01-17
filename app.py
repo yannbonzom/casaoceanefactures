@@ -66,12 +66,17 @@ def receipt():
         remove(path.join(ROOT, session['docName']))
         session['docName'] = None
 
+    year = str(datetime.now().year)
+
     # Get the receipt number to pre-fill the receipt number text box
     connection = sqlite3.connect(path.join(ROOT, "receipts.db"))
     cursor = connection.cursor()
-    cursor.execute("SELECT MAX (receiptID) FROM receipts")
+    cursor.execute("SELECT MAX (receiptID) FROM receipts WHERE endDate >= '{year}-01-01'")
     receiptIDData = cursor.fetchall()
-    receiptID = int(receiptIDData[0][0])
+    if receiptIDData[0][0] is None:
+        receiptID = 0
+    else:
+        receiptID = int(receiptIDData[0][0])
     newReceiptID = receiptID + 1
     cursor.close()
     connection.commit()
@@ -190,20 +195,33 @@ def stats():
         clientRevCursor = connection.cursor()
         clientRevCursor.execute(f"SELECT SUM (totalPrice) FROM receipts WHERE type = 'client' AND endDate >= '{year}-01-01'")
         clientRevData = clientRevCursor.fetchall()
-        clientRev = float(clientRevData[0][0])
+        # Handle the case where there is not yet any data
+        if clientRevData[0][0] is None:
+            clientRev = 0.00
+        else:
+            clientRev = float(clientRevData[0][0])
         revenues['clientRev'] = str(round(clientRev)) + " MAD"
         # Get total revenue from seminars
         seminarRevCursor = connection.cursor()
         seminarRevCursor.execute(f"SELECT SUM (lengthOfStay), AVG (pricePerDayWithoutTax) FROM receipts WHERE type = 'seminar' AND endDate >= '{year}-01-01'")
         seminarRevData = seminarRevCursor.fetchall()
-        seminarRev = (float(seminarRevData[0][0]) * float(seminarRevData[0][1])) * 1.2
+        if seminarRevData[0][0] is None or seminarRevData[0][1] is None:
+            seminarRev = 0.0
+        else:
+            seminarRev = (float(seminarRevData[0][0]) * float(seminarRevData[0][1])) * 1.2
         revenues['seminarRev'] = str(round(seminarRev)) + " MAD"
         # Get total revenue (client + seminar)
         total = clientRev + seminarRev
         revenues['total'] = str(round(total)) + " MAD"
         # Get percentages of different revenues
-        revenues['clientPercent'] = round(((clientRev / total) * 100), 1)
-        revenues['seminarPercent'] = round(((seminarRev / total) * 100), 1)
+        if clientRev == 0.0:
+            revenues['clientPercent'] = 0.0
+        else:
+            revenues['clientPercent'] = round(((clientRev / total) * 100), 1)
+        if seminarRev == 0.0:
+            revenues['seminarPercent'] = 0.0
+        else:
+            revenues['seminarPercent'] = round(((seminarRev / total) * 100), 1)
 
         # CLIENT SOURCES TABLE
         # Set up dict with source percentages
@@ -220,8 +238,12 @@ def stats():
         otherCount = float(otherData[0][0])
         # Calculate percentages and store in sources dict
         total = airbnbCount + otherCount
-        sources['percentAirbnb'] = round(((airbnbCount / total) * 100), 1)
-        sources['percentOther'] = round(((otherCount / total) * 100), 1) 
+        if total != 0:
+            sources['percentAirbnb'] = round(((airbnbCount / total) * 100), 1)
+            sources['percentOther'] = round(((otherCount / total) * 100), 1) 
+        else:
+            sources['percentAirbnb'] = 0.0
+            sources['percentOther'] = 0.0
 
         # ALL CLIENT DATA
         clientDataCursor = connection.cursor()
