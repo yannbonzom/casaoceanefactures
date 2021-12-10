@@ -1,4 +1,4 @@
-# Receipt-generating website for the Casa Oceane Bed & Breakfast
+# Receipt-generating Website for the Casa Oceane Bed & Breakfast
 
 This website allows a bed & breakfast called Casa Oceane in Casablanca, Morocco to easily and quickly generate receipts. While it usually took the owners around 5 minutes per receipt, they can now generate them in under 30 seconds. 
 
