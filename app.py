@@ -34,7 +34,7 @@ def login():
 
     # Log user in
     else:
-        # Using hash of the password Mom decided on
+        # Using hash of the password decided on
         if check_password_hash('pbkdf2:sha256:150000$NdXimIou$e43134704cb1264e6532218161e1d8f9f07f4eaea96c0c0807aa7175c3b5c540', request.form['password']):
             user = User()
             user.id = 'CASAOCEANE'
